@@ -32,9 +32,7 @@ Where Pitchside can be published, what each store needs, and the recommended ord
 **Website:** https://calebtek.github.io/Pitchside/. It's hosted on GitHub Pages from the `gh-pages` branch.
 **Download link** (always the newest release): `https://github.com/CalebTek/Pitchside/releases/latest/download/Pitchside.apk`
 
-To publish a new version:
-1. Build the APK (see [build-and-release.md](build-and-release.md)).
-2. Create a GitHub Release tagged `vX.Y.Z` and attach the file **named exactly `Pitchside.apk`**. The website's download button points at that name.
+To publish a new version, push a version tag (for example `git tag v1.2.0 && git push origin v1.2.0`). The **Release APK** GitHub Action builds the APK and attaches it to the release as `Pitchside.apk`, which is the name the website's download button points at. Details in [build-and-release.md](build-and-release.md#5-direct-apk-release-automated).
 
 > ⚠️ The direct APK is signed with a different key from the Play Store version. Users who later switch to the Play version must uninstall the APK first. Their tournaments are stored on the phone and will be lost.
 

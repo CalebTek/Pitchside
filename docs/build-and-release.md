@@ -60,11 +60,20 @@ EAS creates and stores the signing keys for you. **Keep the Android upload key s
 4. Fill in the privacy nutrition label (*Data Not Collected* for 1.0), screenshots for the required iPhone sizes, a description and a support URL.
 5. Test with TestFlight, then submit for review.
 
-## 5. Direct APK release
+## 5. Direct APK release (automated)
 
-1. Build the APK (section 1).
-2. Create a GitHub Release tagged `vX.Y.Z` with release notes.
-3. Attach the APK **named `Pitchside.apk`**. The website button uses `releases/latest/download/Pitchside.apk`.
+The workflow `.github/workflows/release-apk.yml` builds and publishes the APK on GitHub's servers:
+
+1. Raise `version` / `versionCode` in `app.json`.
+2. Update `.github/release-notes.md` with what's new.
+3. Commit, then tag and push:
+   ```bash
+   git tag v1.2.0
+   git push origin v1.2.0
+   ```
+4. The workflow runs tests, builds the APK and creates the GitHub Release with **`Pitchside.apk`** attached. The website's download button (`releases/latest/download/Pitchside.apk`) picks it up automatically.
+
+You can also run it manually from the **Actions** tab (*Run workflow*). That produces the APK as a downloadable build artifact without creating a release.
 
 See [distribution.md](distribution.md) for every store.
 
