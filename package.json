@@ -46,5 +46,8 @@
         "react-native-worklets"
       ]
     }
-  }
+  },
+  "license": "UNLICENSED",
+  "description": "Local football tournament manager: World Cup, Champions League, League and Knockout Cup.",
+  "author": "Olawale Odeyemi Ebenezer (CalebTek)"
 }
