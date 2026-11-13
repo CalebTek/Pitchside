@@ -130,7 +130,9 @@ export function TeamBadge({ team, size = 32 }: { team?: Team | null; size?: numb
       }}
     >
       {team ? (
-        <Text style={{ color, fontFamily: F.display, fontSize: size * 0.42, letterSpacing: 0.5 }}>{initials(team.name)}</Text>
+        <Text style={{ color, fontFamily: F.display, fontSize: size * ((team.short?.length ?? 2) > 2 ? 0.34 : 0.42), letterSpacing: 0.3 }}>
+          {team.short || initials(team.name)}
+        </Text>
       ) : (
         <Icon name="help" size={size * 0.5} color={C.dim} />
       )}

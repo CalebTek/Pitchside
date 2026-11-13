@@ -1,7 +1,9 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ClubPicker } from '../components/ClubPicker';
+import { TallyDraw } from '../components/TallyDraw';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, Icon, IconButton, IconName, SectionTitle, Segmented, Stepper, TeamBadge, Toggle, tap } from '../components/ui';
 import {
@@ -156,15 +158,22 @@ function TeamsStep({
   const [player, setPlayer] = useState('');
   const [bulk, setBulk] = useState(false);
   const [bulkText, setBulkText] = useState('');
+  const [sheet, setSheet] = useState<'clubs' | 'draw' | null>(null);
 
-  const add = (list: { name: string; player?: string }[]) => {
+  const add = (list: { name: string; player?: string; short?: string; color?: string }[]) => {
     const existing = new Set(teams.map((t) => t.name.toLowerCase()));
     const next = [...teams];
     for (const x of list) {
       const nm = x.name.trim();
       if (!nm || existing.has(nm.toLowerCase())) continue;
       existing.add(nm.toLowerCase());
-      next.push({ id: uid('tm'), name: nm, player: x.player?.trim() || undefined, color: TEAM_COLORS[next.length % TEAM_COLORS.length] });
+      next.push({
+        id: uid('tm'),
+        name: nm,
+        player: x.player?.trim() || undefined,
+        short: x.short,
+        color: x.color ?? TEAM_COLORS[next.length % TEAM_COLORS.length],
+      });
     }
     setTeams(next);
   };
@@ -206,6 +215,44 @@ function TeamsStep({
         placeholderTextColor={C.dim}
         style={[styles.input, styles.nameInput]}
       />
+
+      <View style={styles.actions}>
+        <Pressable onPress={() => setSheet('clubs')} style={styles.action}>
+          <LinearGradient colors={['#3B4BD8', '#141B6B']} style={styles.actionIcon}>
+            <Icon name="shield-star" size={22} color="#fff" />
+          </LinearGradient>
+          <Text style={styles.actionTitle}>Top clubs</Text>
+          <Text style={styles.actionSub}>Pick from 100+ clubs & nations</Text>
+        </Pressable>
+        <Pressable onPress={() => setSheet('draw')} style={styles.action}>
+          <LinearGradient colors={[C.gold, C.goldDeep]} style={styles.actionIcon}>
+            <Icon name="dice-multiple" size={22} color="#3A2500" />
+          </LinearGradient>
+          <Text style={styles.actionTitle}>Tally draw</Text>
+          <Text style={styles.actionSub}>Players pick a colour, get a random club</Text>
+        </Pressable>
+      </View>
+
+      <Modal visible={sheet === 'clubs'} animationType="slide" onRequestClose={() => setSheet(null)}>
+        <ClubPicker
+          taken={teams.map((t) => t.name)}
+          onClose={() => setSheet(null)}
+          onDone={(clubs) => {
+            add(clubs.map((c) => ({ name: c.name, short: c.short, color: c.color })));
+            setSheet(null);
+          }}
+        />
+      </Modal>
+      <Modal visible={sheet === 'draw'} animationType="slide" onRequestClose={() => setSheet(null)}>
+        <TallyDraw
+          initialPool={teams.map((t) => ({ name: t.name, short: t.short, color: t.color }))}
+          onClose={() => setSheet(null)}
+          onDone={(drawn) => {
+            setTeams(drawn);
+            setSheet(null);
+          }}
+        />
+      </Modal>
 
       <SectionTitle
         title={`Teams · ${teams.length}`}
@@ -488,6 +535,11 @@ const styles = StyleSheet.create({
   link: { color: C.mint, fontFamily: F.semi, fontSize: 13 },
   hint: { color: C.sub, fontFamily: F.body, fontSize: 12.5, lineHeight: 18 },
   addBtn: { width: 50, height: 50, borderRadius: 14, backgroundColor: C.mint, alignItems: 'center', justifyContent: 'center' },
+  actions: { flexDirection: 'row', gap: 10, marginTop: 16 },
+  action: { flex: 1, padding: 14, borderRadius: R.lg, backgroundColor: C.card, borderWidth: 1, borderColor: C.line, gap: 4 },
+  actionIcon: { width: 42, height: 42, borderRadius: 13, alignItems: 'center', justifyContent: 'center', marginBottom: 6 },
+  actionTitle: { color: C.text, fontFamily: F.display, fontSize: 19, textTransform: 'uppercase' },
+  actionSub: { color: C.sub, fontFamily: F.body, fontSize: 12, lineHeight: 16 },
   quickRow: { marginTop: 18, alignItems: 'center' },
   quickBtn: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 99, borderWidth: 1, borderColor: C.line, backgroundColor: C.card },
   quickText: { color: C.text, fontFamily: F.semi, fontSize: 13 },

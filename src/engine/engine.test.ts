@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { drawAll, pickRandom, maxPerPlayer, TALLIES } from './draw';
 import {
   Resolver, Settings, Tournament, Format, Team, createTournament, defaultSettings, validate, seedOrder, TEAM_COLORS,
 } from './index';
@@ -186,6 +187,30 @@ test('two-legged tie: aggregate and penalties', () => {
 test('validation messages', () => {
   assert.match(validate('ucl', 9, defaultSettings('ucl', 9))!, /even/);
   assert.match(validate('worldcup', 6, { ...defaultSettings('worldcup', 6), groupCount: 4 })!, /need at least/);
+});
+
+test('tally draw: unique clubs, right counts', () => {
+  for (const seed of [1, 2, 3, 4, 5]) {
+    const pool = Array.from({ length: 20 }, (_, i) => `Club ${i}`);
+    const res = drawAll(pool, 6, 3, rng(seed));
+    assert.equal(res.length, 6);
+    res.forEach((r) => assert.equal(r.length, 3));
+    const flat = res.flat();
+    assert.equal(new Set(flat).size, 18);
+    flat.forEach((c) => assert.ok(pool.includes(c)));
+  }
+  assert.throws(() => drawAll(['a', 'b'], 3, 1));
+  assert.equal(maxPerPlayer(20, 6), 3);
+  assert.equal(pickRandom(['a'], new Set(['a'])), null);
+  assert.equal(new Set(TALLIES.map((t) => t.color)).size, TALLIES.length);
+});
+
+test('tally draw: every club can be drawn (not biased to the front)', () => {
+  const pool = ['A', 'B', 'C', 'D', 'E'];
+  const seen = new Set<string>();
+  const r = rng(11);
+  for (let i = 0; i < 200; i++) seen.add(drawAll(pool, 1, 1, r)[0][0]);
+  assert.equal(seen.size, 5);
 });
 
 console.log(`\n${passed} tests passed`);

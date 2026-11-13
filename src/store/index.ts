@@ -44,7 +44,9 @@ export const useStore = create<State>()(
         set((s) => ({
           tournaments: patch(s.tournaments, tid, (t) => ({
             ...t,
-            teams: t.teams.map((x) => (x.id === teamId ? { ...x, name, player } : x)),
+            teams: t.teams.map((x) =>
+              x.id === teamId ? { ...x, name, player, short: name === x.name ? x.short : undefined } : x,
+            ),
           })),
         })),
       resetResults: (tid) => set((s) => ({ tournaments: patch(s.tournaments, tid, (t) => ({ ...t, results: {} })) })),

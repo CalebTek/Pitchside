@@ -6,6 +6,8 @@ export interface Team {
   /** Who controls this team (e.g. the gamer's name). Optional. */
   player?: string;
   color: string;
+  /** Up to 3-letter code shown on the badge (e.g. MCI). Falls back to initials. */
+  short?: string;
 }
 
 export interface Settings {

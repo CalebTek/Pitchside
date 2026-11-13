@@ -36,7 +36,8 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "tsx src/engine/engine.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "docs:diagrams": "node scripts/docs-diagrams.mjs"
   },
   "private": true,
   "expo": {
