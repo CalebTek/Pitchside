@@ -66,14 +66,11 @@ The workflow `.github/workflows/release-apk.yml` builds and publishes the APK on
 
 1. Raise `version` / `versionCode` in `app.json`.
 2. Update `.github/release-notes.md` with what's new.
-3. Commit, then tag and push:
-   ```bash
-   git tag v1.2.0
-   git push origin v1.2.0
-   ```
-4. The workflow runs tests, builds the APK and creates the GitHub Release with **`Pitchside.apk`** attached. The website's download button (`releases/latest/download/Pitchside.apk`) picks it up automatically.
+3. Commit and push to `main`.
+4. On GitHub: **Actions → Release APK → Run workflow**. (Pushing a tag such as `v1.2.0` also triggers it.)
+5. The workflow runs the tests, builds the APK, tags the commit `v<version from app.json>` and creates the GitHub Release with **`Pitchside.apk`** attached. The website's download button (`releases/latest/download/Pitchside.apk`) picks it up automatically.
 
-You can also run it manually from the **Actions** tab (*Run workflow*). That produces the APK as a downloadable build artifact without creating a release.
+If a release with that version already exists, its APK is replaced, so remember to raise the version first.
 
 See [distribution.md](distribution.md) for every store.
 
