@@ -29,6 +29,10 @@ Pitchside uses a dark, stadium-at-night look: deep navy surfaces, mint-green for
 | League | `#9B7CFF → #4B2A9E` |
 | Knockout | `#FF7A45 → #B0244B` |
 
+### Tally colours
+
+Defined in `src/engine/draw.ts` as `TALLIES`: Red `#FF4D5E`, Blue `#4C7DFF`, Green `#2EE07A`, Gold `#FFC93C`, Purple `#A77BFF`, Orange `#FF8A3D`, Pink `#FF6BD6`, Cyan `#2ED3F0`, White `#F2F5FF`, Lime `#C6F24E`, Teal `#19C2A0`, Coral `#FF8F7A`, Sky `#7FB2FF`, Bronze `#D19A66`, Silver `#AEB7CF`, Magenta `#E040FB`. They're all bright enough to read on the dark background, and the drawn teams use them as their badge colour.
+
 ### Table zones
 
 | Zone | Colour |
@@ -57,7 +61,9 @@ Pitchside uses a dark, stadium-at-night look: deep navy surfaces, mint-green for
 | `Button` | `primary` (mint gradient), `gold`, `danger`, `ghost`. Height 54, medium haptic |
 | `IconButton` | 42×42 rounded square |
 | `Chip` | Tinted pill (`color + 22` fill, `+55` border) |
-| `TeamBadge` | Rounded square with the team's initials in its colour. `?` when TBD |
+| `TeamBadge` | Rounded square showing the team's `short` code (or initials) in its colour. `?` when TBD |
+| `ClubPicker` | Full-screen sheet: search, gold pack chips, league chips, checkable rows, pinned add button |
+| `TallyDraw` | Players & tally palette → grid of tally cards with a spin reveal |
 | `Segmented` | Tab control. The active tab is filled mint |
 | `Stepper` | Compact horizontal, or `big` vertical (+ / number / −) for score entry |
 | `Toggle` | Row with label, hint and a custom switch |

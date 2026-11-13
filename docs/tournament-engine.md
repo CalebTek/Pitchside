@@ -89,6 +89,11 @@ If there are fewer entries than the bracket size (the next power of 2), the miss
 
 ### Champions League knockout entry (`koSize = K`)
 
+<!-- diagram:ucl-knockout-entry -->
+![ucl-knockout-entry](diagrams/ucl-knockout-entry.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/ucl-knockout-entry.mmd</code>)</summary>
+
 ```mermaid
 flowchart LR
     T["League table"] --> D["1 … K/2<br/>straight to KO"]
@@ -99,13 +104,27 @@ flowchart LR
     D --> KO
 ```
 
+</details>
+<!-- /diagram -->
+
 For the real format (36 teams, K = 16): 9th plays 24th … 16th plays 17th. In the Round of 16, 1st plays the winner of 16th v 17th, and 8th plays the winner of 9th v 24th.
 
 ### Third-place match
 
 Placed between the semi-finals and the final, using the **losers** of both semi-finals.
 
-## 5. Resolution
+## 5. Tally draw
+
+`src/engine/draw.ts` handles the random club draw used before a tournament is created.
+
+- `TALLIES`: 16 named colours (Red, Blue, Green, Gold…). Each player takes one, so there can be at most 16 players.
+- `pickRandom(pool, taken)`: picks a club uniformly at random from those not yet drawn.
+- `drawAll(pool, players, perPlayer)`: draws every club at once, **round by round** (everyone's 1st club, then everyone's 2nd…). Throws an error if `pool < players × perPlayer`.
+- `maxPerPlayer(pool, players)`: the most clubs each player can get from this pool.
+
+The UI calls `pickRandom` one tap at a time. Every spin draws from the clubs still left, so the result is equally fair whether players tap one by one or press **Draw all**. The spinning animation is only for show: the club is chosen before the animation starts.
+
+## 6. Resolution
 
 The `Resolver` takes a tournament and works everything out from the stored scores, caching results as it goes.
 

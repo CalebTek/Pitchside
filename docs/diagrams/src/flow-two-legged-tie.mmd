@@ -1,0 +1,9 @@
+stateDiagram-v2
+    [*] --> Leg1Open: Both teams known
+    Leg1Open --> Leg2Open: Leg 1 saved
+    note right of Leg1Open: Leg 2 is locked ("Leg 1 first")
+    Leg2Open --> Decided: Aggregate not level
+    Leg2Open --> Decided: Aggregate level + shoot-out winner
+    Leg2Open --> MissingPens: Aggregate level, no shoot-out (old leg 1 was edited)
+    MissingPens --> Decided: Add shoot-out
+    Decided --> [*]: Winner moves on

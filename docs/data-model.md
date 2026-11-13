@@ -4,6 +4,11 @@ All types live in `src/engine/types.ts`.
 
 ## Entity relationships
 
+<!-- diagram:erd -->
+![erd](diagrams/erd.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/erd.mmd</code>)</summary>
+
 ```mermaid
 erDiagram
     TOURNAMENT ||--|{ TEAM : has
@@ -27,6 +32,7 @@ erDiagram
       string name
       string player "optional"
       string color "hex"
+      string short "badge code, optional"
     }
     FIXTURE {
       string id "e.g. G0_2_1, L3_5"
@@ -58,6 +64,9 @@ erDiagram
     }
 ```
 
+</details>
+<!-- /diagram -->
+
 ## Match identifiers
 
 | Match | ID pattern | Example |
@@ -67,6 +76,30 @@ erDiagram
 | Knockout leg | `{tieId}-{leg}` | `ko2_1-1`, `po_3-2` |
 
 `results` is a map from match ID to `Result`. Knockout match IDs stay the same even when the teams in the slot change. That's why `Result.h` and `Result.a` exist.
+
+## Club catalogue
+
+`src/data/clubs.ts` is static data bundled with the app. It is not saved per tournament.
+
+| Type | Fields | Notes |
+| --- | --- | --- |
+| `PresetClub` | `name`, `short` (3-letter code), `color`, `league` | 105 entries: 12 Premier League, 10 La Liga, 9 Serie A, 8 Bundesliga, 7 Ligue 1, 15 rest of Europe, 12 rest of the world, 32 national teams |
+| `LEAGUES` | `key`, `name`, `short` | Filter chips in the picker |
+| `PACKS` | `id`, `name`, `clubs` | One-tap sets: Big 8, Top 16 Europe, Champions League 36, World Cup 32 |
+
+When a preset club is added, its `short` and `color` are copied onto the `Team`. After that the tournament no longer depends on the catalogue, so editing the catalogue never changes existing tournaments. Renaming a team clears its `short`, so the badge falls back to initials.
+
+Only names and colours are stored. No crests or logos are bundled.
+
+## Tally draw output
+
+`TallyDraw` produces ordinary `Team` objects:
+
+| Field | Value |
+| --- | --- |
+| `name`, `short` | The drawn club |
+| `player` | The player who owned the tally |
+| `color` | The tally colour, so all of a player's clubs share one colour |
 
 ## Derived (never stored) types
 

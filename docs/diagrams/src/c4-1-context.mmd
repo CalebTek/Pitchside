@@ -1,0 +1,23 @@
+flowchart TB
+    organiser(["👤 <b>Tournament organiser</b><br/>Sets up competitions and<br/>enters scores after each game"])
+    players(["👥 <b>Players / spectators</b><br/>Look at tables, fixtures and<br/>the bracket on the organiser's phone"])
+
+    subgraph boundary [" "]
+      pitchside["📱 <b>Pitchside</b><br/>Mobile app that runs World Cup,<br/>Champions League, league and<br/>knockout competitions"]
+    end
+
+    console["🎮 <b>Game console</b><br/>eFootball / EA FC<br/>(where matches are actually played)"]
+    stores["🏪 <b>App stores</b><br/>Google Play / Apple App Store<br/>(distribution)"]
+
+    organiser -- "Creates tournaments,<br/>enters results" --> pitchside
+    players -- "View standings<br/>and bracket" --> pitchside
+    organiser -. "Plays matches on" .-> console
+    stores -- "Installs & updates" --> pitchside
+
+    classDef person fill:#12B97A,stroke:#0b7a52,color:#fff
+    classDef system fill:#1F2B50,stroke:#3DF5A7,color:#fff
+    classDef ext fill:#5F6A8F,stroke:#3c4566,color:#fff
+    class organiser,players person
+    class pitchside system
+    class console,stores ext
+    style boundary fill:none,stroke:none

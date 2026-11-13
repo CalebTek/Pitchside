@@ -1,0 +1,13 @@
+sequenceDiagram
+    autonumber
+    actor U as Organiser
+    participant S as Store
+    participant R as Resolver
+
+    Note over S: SF1 was won by Team A.<br/>Final saved as A 2–1 C.
+    U->>S: Change SF1 so that Team B wins
+    S->>R: Recalculate
+    R->>R: Final slot now has B v C
+    R->>R: Saved final result has h=A ≠ B → ignored
+    R-->>U: Final shows B v C, unplayed. Champion cleared
+    Note over S: The old final result stays in storage.<br/>If SF1 is changed back, it becomes valid again.

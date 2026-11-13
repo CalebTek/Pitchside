@@ -1,0 +1,19 @@
+sequenceDiagram
+    autonumber
+    participant OS as Android / iOS
+    participant L as _layout.tsx
+    participant Z as Zustand persist
+    participant AS as AsyncStorage
+    participant H as Home screen
+
+    OS->>L: Start JS bundle (Hermes)
+    L->>L: SplashScreen.preventAutoHideAsync()
+    par Fonts
+        L->>L: useFonts(Barlow Condensed, Inter)
+    and Rehydrate
+        Z->>AS: getItem("pitchside-v1")
+        AS-->>Z: JSON { state: { tournaments } }
+    end
+    L->>L: SplashScreen.hideAsync()
+    L->>H: Render stack root
+    H->>H: For each tournament: new Resolver(t) → stage, progress, champion

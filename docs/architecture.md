@@ -4,6 +4,11 @@
 
 Pitchside is a **single-container, offline-first mobile app** made of three layers. Dependencies only point one way: downwards.
 
+<!-- diagram:layers -->
+![layers](diagrams/layers.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/layers.mmd</code>)</summary>
+
 ```mermaid
 flowchart TB
     P["<b>Presentation</b><br/>src/app (screens) · src/components (UI kit) · src/theme"]
@@ -19,6 +24,9 @@ flowchart TB
     class S b
     class D c
 ```
+
+</details>
+<!-- /diagram -->
 
 | Layer | May import | Must not import |
 | --- | --- | --- |
@@ -57,6 +65,8 @@ src/
 │       └── match/[mid].tsx       # Score entry (modal)
 ├── components/
 │   ├── ui.tsx                    # Text, Button, Chip, Stepper, Toggle, TeamBadge…
+│   ├── ClubPicker.tsx            # Preset club browser: search, league filter, packs
+│   ├── TallyDraw.tsx             # Colour-tally random club draw
 │   ├── MatchCard.tsx
 │   ├── StandingsTable.tsx        # + ZoneLegend
 │   ├── Bracket.tsx               # Bracket columns + TieCard
@@ -65,8 +75,10 @@ src/
 │   ├── types.ts                  # All domain types
 │   ├── generate.ts               # Draw, fixtures, bracket skeleton, validation
 │   ├── resolve.ts                # Resolver: standings, progression, podium
+│   ├── draw.ts                   # Tally colours + random club draw helpers
 │   ├── index.ts                  # Public API of the engine
 │   └── engine.test.ts            # Simulation-based test suite
+├── data/clubs.ts                 # Built-in club & national-team catalogue
 ├── store/index.ts                # Zustand store + persistence
 └── theme/index.ts                # Colours (C), fonts (F), radii (R), format gradients
 ```
@@ -95,5 +107,6 @@ src/
 | A new competition format | Add to `Format`, then add a branch in `createTournament`, `defaultSettings`, `validate`, `zoneFor` and the wizard's `SettingsForm`. Write a simulation test |
 | A new tie-breaker | `computeTable` comparator in `resolve.ts` |
 | Player/goal statistics | Extend `Result` (for example `scorers?`), then add a stats selector to the `Resolver` |
+| More preset clubs or packs | `src/data/clubs.ts`: add a row to `DATA` or a new entry in `PACKS` |
 | Cloud sync | Add a sync service next to `store/`. The data is already plain JSON |
 | Sharing images of tables or brackets | A presentation-layer feature (for example `react-native-view-shot`). The engine doesn't change |

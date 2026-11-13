@@ -13,7 +13,7 @@ The engine has no React dependencies, so tests run in Node in about a second, wi
 ## Running
 
 ```bash
-npm test             # → "119 tests passed"
+npm test             # → "121 tests passed"
 npm run typecheck
 ```
 
@@ -41,6 +41,7 @@ Each scenario runs with 5 different seeds.
 | Two-legged tie | Aggregate maths, leg-2 `firstLeg` view, when penalties are needed, winner on penalties |
 | Edits | Changing a semi-final voids a final that now has different teams |
 | Validation | Odd team count in a league phase is rejected. Too many groups are rejected |
+| Tally draw | Every player gets the right number of clubs, no club is drawn twice, every club in the pool can be drawn, a pool that is too small is rejected, tally colours are unique |
 
 ## Adding a test
 
@@ -55,6 +56,8 @@ test('my new rule', () => {
 ## Manual release checklist
 
 - [ ] Create one tournament of each format with placeholder teams
+- [ ] Top clubs: search, league filter, a pack, select all; clubs already added show as added
+- [ ] Tally draw: 4 players, 2 clubs each; spin one tally, then Draw all; Use these teams → 8 teams with the right players and colours
 - [ ] Enter a draw in a single-leg knockout → shoot-out appears and must have a winner
 - [ ] Two-legged tie: leg 2 locked until leg 1 saved; aggregate shown
 - [ ] Edit a group result after the knockouts started → bracket updates

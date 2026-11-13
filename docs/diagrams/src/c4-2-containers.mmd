@@ -1,0 +1,23 @@
+flowchart TB
+    user(["👤 Organiser"])
+
+    subgraph device ["📱 User's phone (Android / iOS)"]
+      direction TB
+      app["<b>Pitchside app</b><br/><i>React Native 0.88 · Expo SDK 58 · TypeScript</i><br/>UI, navigation, tournament engine"]
+      storage[("<b>AsyncStorage</b><br/><i>On-device key–value store</i><br/>Key: pitchside-v1<br/>JSON of all tournaments")]
+    end
+
+    eas["☁️ <b>EAS Build</b><br/><i>Expo cloud service</i><br/>Compiles .apk / .aab / .ipa"]
+    stores["🏪 <b>Play Store / App Store</b>"]
+
+    user -- "Taps, enters scores" --> app
+    app -- "Reads and writes JSON<br/>(zustand persist)" --> storage
+    eas -- "Produces signed binaries" --> stores
+    stores -- "Installs" --> app
+
+    classDef c fill:#1F2B50,stroke:#3DF5A7,color:#fff
+    classDef db fill:#18223F,stroke:#FFC93C,color:#fff
+    classDef ext fill:#5F6A8F,stroke:#3c4566,color:#fff
+    class app c
+    class storage db
+    class eas,stores ext

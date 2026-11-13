@@ -1,0 +1,7 @@
+flowchart LR
+    T["League table"] --> D["1 … K/2<br/>straight to KO"]
+    T --> P["K/2+1 … 3K/2<br/>Knockout play-offs"]
+    T --> O["3K/2+1 …<br/>Eliminated"]
+    P --> PW["Play-off tie t:<br/>(K/2+t) v (3K/2+1−t)"]
+    PW --> KO["Seed s > K/2 in the KO<br/>= winner of tie (s − K/2)"]
+    D --> KO

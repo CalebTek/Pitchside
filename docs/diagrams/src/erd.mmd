@@ -1,0 +1,52 @@
+erDiagram
+    TOURNAMENT ||--|{ TEAM : has
+    TOURNAMENT ||--|| SETTINGS : uses
+    TOURNAMENT ||--o{ FIXTURE : "league / group matches"
+    TOURNAMENT ||--o{ KO_ROUND : "knockout skeleton"
+    KO_ROUND ||--|{ TIE : contains
+    TIE ||--|| SOURCE : "slot a"
+    TIE ||--|| SOURCE : "slot b"
+    TOURNAMENT ||--o{ RESULT : "results by match id"
+
+    TOURNAMENT {
+      string id
+      string name
+      Format format
+      number createdAt
+      stringArrArr groups "World Cup only"
+    }
+    TEAM {
+      string id
+      string name
+      string player "optional"
+      string color "hex"
+      string short "badge code, optional"
+    }
+    FIXTURE {
+      string id "e.g. G0_2_1, L3_5"
+      string stage "league | group"
+      number round
+      number group
+      string home
+      string away
+    }
+    KO_ROUND {
+      string id "ko0, ko1, po, ko3rd"
+      string name "Round of 16…"
+      string short "R16, QF, SF, F"
+      boolean twoLegs
+      boolean isPlayoff
+      boolean isThirdPlace
+    }
+    TIE {
+      string id "e.g. ko1_3, po_4"
+    }
+    RESULT {
+      number hs "home score"
+      number as "away score"
+      number hp "home pens"
+      number ap "away pens"
+      string h "home team at save time"
+      string a "away team at save time"
+      number at "timestamp"
+    }

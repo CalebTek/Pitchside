@@ -25,6 +25,8 @@ eFootball removed its cup competitions, but friends still want to play them. Pit
 
 - **Offline-first:** everything is stored on the phone. No account, no server, no data costs.
 - **Built for local play:** add a player name next to each club ("Arsenal – Caleb"), or paste a whole list in one go.
+- **Top clubs, one tap:** 105 preset clubs and national teams with search, league filters and packs (Big 8, Top 16 Europe, Champions League 36, World Cup 32).
+- **Tally draw:** each player picks a colour tally, then the app spins and gives them a random club, so nobody gets to keep their favourite team. You can hand out up to 4 clubs per player.
 - **Fast entry:** big score buttons, haptic feedback, and penalties only show up when they're actually needed.
 
 ## Formats
@@ -49,6 +51,8 @@ eFootball removed its cup competitions, but friends still want to play them. Pit
 | <img src="docs/images/home.png" width="220" /> | <img src="docs/images/groups.png" width="220" /> | <img src="docs/images/league-phase.png" width="220" /> |
 | **Bracket** | **Score entry** | **Champion** |
 | <img src="docs/images/bracket.png" width="220" /> | <img src="docs/images/score-entry.png" width="220" /> | <img src="docs/images/champion.png" width="220" /> |
+| **Top clubs** | **Tally draw: players** | **Tally draw: reveal** |
+| <img src="docs/images/club-picker.png" width="220" /> | <img src="docs/images/tally-players.png" width="220" /> | <img src="docs/images/tally-reveal.png" width="220" /> |
 
 ## Tech stack
 
@@ -60,7 +64,8 @@ eFootball removed its cup competitions, but friends still want to play them. Pit
 | State | Zustand + `persist` middleware |
 | Storage | AsyncStorage (on-device) |
 | UI | Custom design system · expo-linear-gradient · Barlow Condensed + Inter fonts · MaterialCommunityIcons |
-| Tests | Node + `tsx` running the pure engine test suite |
+| Tests | Node + `tsx` running the pure engine test suite (121 tests) |
+| Docs | Mermaid sources rendered to PNG with `npm run docs:diagrams` |
 | Builds | Gradle (local APK) · EAS Build (Android / iOS in the cloud) |
 
 More detail in [`docs/tech-stack.md`](docs/tech-stack.md).
@@ -115,7 +120,8 @@ The full release checklist for Google Play and the App Store is in [`docs/build-
 src/
 ├── app/            # Screens (expo-router file-based routes)
 ├── components/     # Reusable UI: MatchCard, StandingsTable, Bracket, ui kit
-├── engine/         # Pure TypeScript tournament engine + tests
+├── data/           # Built-in club & national-team catalogue
+├── engine/         # Pure TypeScript tournament engine, tally draw + tests
 ├── store/          # Zustand store, persisted to AsyncStorage
 └── theme/          # Colours, fonts, radii
 assets/             # App icon, adaptive icon, splash

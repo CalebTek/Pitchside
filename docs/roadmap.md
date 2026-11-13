@@ -9,6 +9,12 @@ Status: ✅ done · 🔜 next · 💡 idea
 - ✅ Editing a score updates everything downstream
 - ✅ Offline storage, champion celebration screen
 
+## 1.1 — Faster setup ✅
+
+- ✅ Preset club catalogue (105 clubs & national teams) with search, league filters and one-tap packs
+- ✅ Tally draw: players pick colour tallies and each gets random clubs with a spin reveal
+- ✅ 3-letter badge codes (MCI, MUN…) for preset clubs
+
 ## Feature ideas
 
 | Feature | Value | Notes |

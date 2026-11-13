@@ -15,10 +15,18 @@ Technical documentation for Pitchside, a mobile app for running local football t
 | 9 | [Build & release](build-and-release.md) | Ship an APK, a Play Store bundle or an iOS build |
 | 10 | [Roadmap](roadmap.md) | See what's planned next, including monetisation options |
 | — | [ADRs](adr/) | Read the reasons behind key decisions |
+| — | [Diagrams](diagrams/) | Diagram sources (`src/*.mmd`) and rendered PNGs |
 
 ## Diagrams
 
-All diagrams are written in [Mermaid](https://mermaid.js.org/), which GitHub renders inline. To edit one, change the text inside the ```` ```mermaid ```` block. You can preview it at <https://mermaid.live>.
+Each diagram appears as a **PNG image**, so it shows everywhere: the GitHub website and mobile app, VS Code, PDF exports. Below each image there's a collapsible copy of its [Mermaid](https://mermaid.js.org/) source.
+
+To change a diagram:
+
+1. Edit its source in `docs/diagrams/src/<name>.mmd`. You can preview it at <https://mermaid.live>.
+2. Run `npm run docs:diagrams`. This re-renders the PNGs and updates the Markdown between the `<!-- diagram:name -->` markers.
+
+To add a diagram, create a new `.mmd` file, put an empty marker pair in a doc, and run the script.
 
 ## Conventions
 

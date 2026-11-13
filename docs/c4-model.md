@@ -10,6 +10,11 @@ Pitchside 1.0 is a standalone, offline mobile app. Levels 1 and 2 are therefore 
 
 Who uses Pitchside and what it talks to.
 
+<!-- diagram:c4-1-context -->
+![c4-1-context](diagrams/c4-1-context.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/c4-1-context.mmd</code>)</summary>
+
 ```mermaid
 flowchart TB
     organiser(["👤 <b>Tournament organiser</b><br/>Sets up competitions and<br/>enters scores after each game"])
@@ -36,6 +41,9 @@ flowchart TB
     style boundary fill:none,stroke:none
 ```
 
+</details>
+<!-- /diagram -->
+
 **Key point:** the console and Pitchside are not connected. The organiser enters scores by hand, which is why the app works with any football game.
 
 ---
@@ -43,6 +51,11 @@ flowchart TB
 ## Level 2 — Containers
 
 A container is anything that runs code or stores data on its own.
+
+<!-- diagram:c4-2-containers -->
+![c4-2-containers](diagrams/c4-2-containers.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/c4-2-containers.mmd</code>)</summary>
 
 ```mermaid
 flowchart TB
@@ -70,6 +83,9 @@ flowchart TB
     class eas,stores ext
 ```
 
+</details>
+<!-- /diagram -->
+
 | Container | Technology | Responsibility |
 | --- | --- | --- |
 | Pitchside app | React Native, Expo, TypeScript, Hermes JS engine | Everything the user sees and every tournament calculation |
@@ -81,6 +97,11 @@ flowchart TB
 ---
 
 ## Level 3 — Components (inside the app)
+
+<!-- diagram:c4-3-components -->
+![c4-3-components](diagrams/c4-3-components.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/c4-3-components.mmd</code>)</summary>
 
 ```mermaid
 flowchart LR
@@ -95,10 +116,19 @@ flowchart LR
         entry["Score entry (modal)<br/>t/[id]/match/[mid].tsx"]
         champ["Champion<br/>t/[id]/champion.tsx"]
       end
+      subgraph sheets ["Wizard sheets"]
+        direction TB
+        picker["<b>ClubPicker</b><br/>search · leagues · packs"]
+        tally["<b>TallyDraw</b><br/>colour tallies · spin reveal"]
+      end
       kit["<b>UI kit</b><br/>ui.tsx · MatchCard<br/>StandingsTable · Bracket<br/>+ theme"]
       router --> screens
+      wizard --> sheets
       screens --> kit
+      sheets --> kit
     end
+
+    catalogue["<b>Club catalogue</b><br/>src/data/clubs.ts<br/>105 clubs & nations · packs"]
 
     subgraph state ["State — src/store"]
       direction TB
@@ -111,6 +141,7 @@ flowchart LR
       direction TB
       gen["<b>generate.ts</b><br/>defaultSettings · validate<br/>createTournament · buildBracket"]
       res["<b>resolve.ts</b><br/>Resolver: tables, sources, ties,<br/>matches, podium, progress"]
+      draw["<b>draw.ts</b><br/>TALLIES · pickRandom · drawAll"]
       types["<b>types.ts</b>"]
       gen --> types
       res --> types
@@ -118,6 +149,8 @@ flowchart LR
 
     disk[("AsyncStorage")]
 
+    sheets --> catalogue
+    tally -- "pickRandom()" --> draw
     screens -- "read tournaments ·<br/>dispatch actions" --> store
     screens -- "new Resolver(t)<br/>validate()" --> engine
     store -- "createTournament()" --> gen
@@ -126,10 +159,15 @@ flowchart LR
     classDef l1 fill:#1F2B50,stroke:#5B8CFF,color:#fff
     classDef l2 fill:#18223F,stroke:#9B7CFF,color:#fff
     classDef l3 fill:#0E3B2E,stroke:#3DF5A7,color:#fff
-    class router,home,wizard,tscreen,entry,champ,kit l1
+    classDef data fill:#3A2A00,stroke:#FFC93C,color:#fff
+    class router,home,wizard,tscreen,entry,champ,kit,picker,tally l1
     class store,persist l2
-    class gen,res,types l3
+    class gen,res,draw,types l3
+    class catalogue data
 ```
+
+</details>
+<!-- /diagram -->
 
 ### Component responsibilities
 
@@ -152,6 +190,11 @@ flowchart LR
 
 The most important classes and types. See [data-model.md](data-model.md) for every field.
 
+<!-- diagram:c4-4-code -->
+![c4-4-code](diagrams/c4-4-code.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/c4-4-code.mmd</code>)</summary>
+
 ```mermaid
 classDiagram
     direction LR
@@ -164,11 +207,11 @@ classDiagram
       +string[][] groups
       +Fixture[] fixtures
       +KoRound[] ko
-      +Record~string, Result~ results
+      +ResultMap results
     }
     class Fixture {
       +string id
-      +league|group stage
+      +string stage
       +number round
       +number group
       +string home
@@ -189,16 +232,29 @@ classDiagram
     }
     class Source {
       <<union>>
-      team | bye
-      group(pos) | groupPlace(rank)
-      table(pos)
-      winner(tie) | loser(tie)
+      +team
+      +bye
+      +group pos
+      +groupPlace rank
+      +table pos
+      +winner tie
+      +loser tie
     }
     class Result {
-      +number hs, as
-      +number hp, ap
-      +string h, a
+      +number hs
+      +number as
+      +number hp
+      +number ap
+      +string h
+      +string a
       +number at
+    }
+    class Team {
+      +string id
+      +string name
+      +string player
+      +string short
+      +string color
     }
     class Resolver {
       +table() Row[]
@@ -211,6 +267,7 @@ classDiagram
       +stageLabel()
       +needsPens(m, hs, as)
     }
+    Tournament "1" *-- "*" Team
     Tournament "1" *-- "*" Fixture
     Tournament "1" *-- "*" KoRound
     KoRound "1" *-- "*" Tie
@@ -218,5 +275,8 @@ classDiagram
     Tournament "1" *-- "*" Result : keyed by match id
     Resolver ..> Tournament : reads (never mutates)
 ```
+
+</details>
+<!-- /diagram -->
 
 **Design rule:** a `Tournament` stores *what happened* (the setup and the scores). It never stores *what follows from it* (tables, qualifiers, winners). The `Resolver` recalculates those every time. Because of this, editing any score automatically corrects everything downstream. See [ADR-002](adr/002-derive-state-dont-store-it.md).

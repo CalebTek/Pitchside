@@ -1,0 +1,27 @@
+flowchart LR
+    subgraph WC ["World Cup"]
+      direction LR
+      w1["Group stage"] -->|"every group finished"| w2["Knockouts"] --> w3["Final"]
+    end
+    subgraph UCL ["Champions League"]
+      direction LR
+      u1["League phase"] -->|"all league matches played"| u2["Play-offs"] -->|"winners known"| u3["Knockouts"] --> u4["Final"]
+    end
+    subgraph LG ["League"]
+      direction LR
+      l1["Matchdays"] -->|"all fixtures played"| l2["Table decided"]
+    end
+    subgraph KO ["Knockout Cup"]
+      direction LR
+      k1["First round<br/>(byes auto-advance)"] --> k2["…"] --> k3["Final"]
+    end
+    done(["🏆 Finished<br/>champion screen"])
+    w3 --> done
+    u4 --> done
+    l2 --> done
+    k3 --> done
+
+    classDef s fill:#1F2B50,stroke:#5B8CFF,color:#fff
+    classDef f fill:#FFC93C,stroke:#E09A12,color:#3A2500
+    class w1,w2,w3,u1,u2,u3,u4,l1,l2,k1,k2,k3 s
+    class done f

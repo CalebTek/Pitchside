@@ -1,0 +1,78 @@
+classDiagram
+    direction LR
+    class Tournament {
+      +string id
+      +string name
+      +Format format
+      +Team[] teams
+      +Settings settings
+      +string[][] groups
+      +Fixture[] fixtures
+      +KoRound[] ko
+      +ResultMap results
+    }
+    class Fixture {
+      +string id
+      +string stage
+      +number round
+      +number group
+      +string home
+      +string away
+    }
+    class KoRound {
+      +string id
+      +string name
+      +boolean twoLegs
+      +Tie[] ties
+      +boolean isPlayoff
+      +boolean isThirdPlace
+    }
+    class Tie {
+      +string id
+      +Source a
+      +Source b
+    }
+    class Source {
+      <<union>>
+      +team
+      +bye
+      +group pos
+      +groupPlace rank
+      +table pos
+      +winner tie
+      +loser tie
+    }
+    class Result {
+      +number hs
+      +number as
+      +number hp
+      +number ap
+      +string h
+      +string a
+      +number at
+    }
+    class Team {
+      +string id
+      +string name
+      +string player
+      +string short
+      +string color
+    }
+    class Resolver {
+      +table() Row[]
+      +groupTable(g) Row[]
+      +source(Source) teamId
+      +tie(id) TieView
+      +matches() MatchView[]
+      +podium()
+      +progress()
+      +stageLabel()
+      +needsPens(m, hs, as)
+    }
+    Tournament "1" *-- "*" Team
+    Tournament "1" *-- "*" Fixture
+    Tournament "1" *-- "*" KoRound
+    KoRound "1" *-- "*" Tie
+    Tie "1" *-- "2" Source
+    Tournament "1" *-- "*" Result : keyed by match id
+    Resolver ..> Tournament : reads (never mutates)

@@ -1,0 +1,26 @@
+sequenceDiagram
+    autonumber
+    actor U as Organiser
+    participant T as Tournament screen
+    participant M as Score entry modal
+    participant R as Resolver
+    participant S as Store
+
+    U->>T: Tap a match card (or bracket tie)
+    T->>M: push /t/[id]/match/[mid]
+    M->>R: match(mid) → teams, leg, firstLeg, decider
+    U->>M: Set the score with the steppers
+    M->>R: needsPens(match, hs, as)
+    alt Level in a single-leg KO, or level on aggregate in leg 2
+        M-->>U: Show penalty shoot-out (must have a winner)
+    end
+    U->>M: Save
+    M->>S: setResult(tid, mid, {hs, as, hp, ap, h, a})
+    S->>S: Persist
+    M->>R: new Resolver(updated).podium()
+    alt Champion just decided
+        M->>M: router.replace(/t/[id]/champion)
+    else
+        M->>M: router.back()
+    end
+    T->>R: useMemo recalculates tables, bracket, stage, progress

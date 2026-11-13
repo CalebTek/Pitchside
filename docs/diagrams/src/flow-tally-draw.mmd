@@ -1,0 +1,26 @@
+sequenceDiagram
+    autonumber
+    actor P as Players
+    participant W as Create wizard
+    participant T as TallyDraw
+    participant K as ClubPicker / catalogue
+    participant D as engine/draw
+
+    W->>T: Open with current teams as the club pool
+    opt Pool too small
+        T->>K: Add clubs (search, league filter, packs)
+        K-->>T: Selected PresetClubs
+    end
+    loop For each player
+        P->>T: Name + pick a free colour tally
+    end
+    P->>T: Clubs per player (1–4, limited by pool size)
+    T->>T: Go to the draw (needs ≥ 2 players and pool ≥ players × clubs)
+    loop Tap a tally (or "Draw all" queues every tally, round by round)
+        T->>D: pickRandom(pool, alreadyDrawn)
+        D-->>T: Final club
+        T->>T: Spin animation cycles random names, slows, lands on final club
+    end
+    P->>T: Use these teams
+    T-->>W: Team[] (club name + short, player name, tally colour)
+    W->>W: Replace the team list, continue to rules

@@ -1,0 +1,27 @@
+sequenceDiagram
+    autonumber
+    actor U as Organiser
+    participant W as Create wizard
+    participant G as engine/generate
+    participant R as engine/resolve
+    participant S as Store
+
+    U->>W: Pick a format
+    U->>W: Add teams (one by one / paste a list / placeholders)
+    W->>G: defaultSettings(format, teamCount)
+    U->>W: Adjust rules (groups, legs, play-offs, points…)
+    loop On every change
+        W->>G: validate(format, n, settings)
+        alt invalid
+            G-->>W: Error message ("League phase needs an even number of teams")
+        else valid
+            W->>G: createTournament(dry run)
+            W->>R: Resolver.progress().total
+            W-->>U: "How it plays out" summary + match count
+        end
+    end
+    U->>W: Make the draw
+    W->>S: create(input)
+    S->>G: createTournament(input) — shuffle, groups, fixtures, bracket
+    S->>S: Prepend to tournaments, persist
+    W->>W: router.replace(/t/[id])

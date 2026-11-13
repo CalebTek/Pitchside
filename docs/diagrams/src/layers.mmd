@@ -1,0 +1,13 @@
+flowchart TB
+    P["<b>Presentation</b><br/>src/app (screens) · src/components (UI kit) · src/theme"]
+    S["<b>State</b><br/>src/store — Zustand + AsyncStorage persistence"]
+    D["<b>Domain</b><br/>src/engine — pure TypeScript tournament engine"]
+    P --> S
+    P --> D
+    S --> D
+    classDef a fill:#1F2B50,stroke:#5B8CFF,color:#fff
+    classDef b fill:#18223F,stroke:#9B7CFF,color:#fff
+    classDef c fill:#0E3B2E,stroke:#3DF5A7,color:#fff
+    class P a
+    class S b
+    class D c

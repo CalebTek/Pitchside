@@ -4,6 +4,11 @@ Step-by-step views of the main user journeys.
 
 ## 1. App launch
 
+<!-- diagram:flow-launch -->
+![flow-launch](diagrams/flow-launch.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/flow-launch.mmd</code>)</summary>
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -26,7 +31,15 @@ sequenceDiagram
     H->>H: For each tournament: new Resolver(t) → stage, progress, champion
 ```
 
+</details>
+<!-- /diagram -->
+
 ## 2. Create a tournament
+
+<!-- diagram:flow-create -->
+![flow-create](diagrams/flow-create.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/flow-create.mmd</code>)</summary>
 
 ```mermaid
 sequenceDiagram
@@ -58,7 +71,15 @@ sequenceDiagram
     W->>W: router.replace(/t/[id])
 ```
 
+</details>
+<!-- /diagram -->
+
 ## 3. Enter a score
+
+<!-- diagram:flow-score-entry -->
+![flow-score-entry](diagrams/flow-score-entry.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/flow-score-entry.mmd</code>)</summary>
 
 ```mermaid
 sequenceDiagram
@@ -89,9 +110,17 @@ sequenceDiagram
     T->>R: useMemo recalculates tables, bracket, stage, progress
 ```
 
+</details>
+<!-- /diagram -->
+
 ## 4. How a result moves teams forward
 
 What the Resolver does when a knockout slot is read.
+
+<!-- diagram:flow-source-resolution -->
+![flow-source-resolution](diagrams/flow-source-resolution.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/flow-source-resolution.mmd</code>)</summary>
 
 ```mermaid
 flowchart TD
@@ -113,9 +142,17 @@ flowchart TD
     W2 -->|no| N
 ```
 
+</details>
+<!-- /diagram -->
+
 A saved score counts only if `result.h` and `result.a` still match the teams now in that slot.
 
 ## 5. Editing an earlier result
+
+<!-- diagram:flow-edit-result -->
+![flow-edit-result](diagrams/flow-edit-result.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/flow-edit-result.mmd</code>)</summary>
 
 ```mermaid
 sequenceDiagram
@@ -133,7 +170,15 @@ sequenceDiagram
     Note over S: The old final result stays in storage.<br/>If SF1 is changed back, it becomes valid again.
 ```
 
+</details>
+<!-- /diagram -->
+
 ## 6. Two-legged tie
+
+<!-- diagram:flow-two-legged-tie -->
+![flow-two-legged-tie](diagrams/flow-two-legged-tie.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/flow-two-legged-tie.mmd</code>)</summary>
 
 ```mermaid
 stateDiagram-v2
@@ -147,32 +192,86 @@ stateDiagram-v2
     Decided --> [*]: Winner moves on
 ```
 
-## 7. Tournament lifecycle by format
+</details>
+<!-- /diagram -->
+
+## 7. Tally draw (random clubs for players)
+
+Players each pick a colour tally. Each tally then spins and lands on a random club from the pool, so nobody gets to keep their usual team.
+
+<!-- diagram:flow-tally-draw -->
+![flow-tally-draw](diagrams/flow-tally-draw.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/flow-tally-draw.mmd</code>)</summary>
 
 ```mermaid
-stateDiagram-v2
-    direction LR
-    state "World Cup" as WC {
-      [*] --> GroupStage
-      GroupStage --> Knockouts: every group finished
-      Knockouts --> Final
-    }
-    state "Champions League" as UCL {
-      [*] --> LeaguePhase
-      LeaguePhase --> Playoffs: all league matches played
-      Playoffs --> KO: play-off winners known
-      KO --> UFinal
-    }
-    state "League" as LG {
-      [*] --> Rounds
-      Rounds --> TableDecided: all fixtures played
-    }
-    state "Knockout" as KOC {
-      [*] --> Round1
-      Round1 --> KFinal
-    }
-    WC --> Finished
-    UCL --> Finished
-    LG --> Finished
-    KOC --> Finished
+sequenceDiagram
+    autonumber
+    actor P as Players
+    participant W as Create wizard
+    participant T as TallyDraw
+    participant K as ClubPicker / catalogue
+    participant D as engine/draw
+
+    W->>T: Open with current teams as the club pool
+    opt Pool too small
+        T->>K: Add clubs (search, league filter, packs)
+        K-->>T: Selected PresetClubs
+    end
+    loop For each player
+        P->>T: Name + pick a free colour tally
+    end
+    P->>T: Clubs per player (1–4, limited by pool size)
+    T->>T: Go to the draw (needs ≥ 2 players and pool ≥ players × clubs)
+    loop Tap a tally (or "Draw all" queues every tally, round by round)
+        T->>D: pickRandom(pool, alreadyDrawn)
+        D-->>T: Final club
+        T->>T: Spin animation cycles random names, slows, lands on final club
+    end
+    P->>T: Use these teams
+    T-->>W: Team[] (club name + short, player name, tally colour)
+    W->>W: Replace the team list, continue to rules
 ```
+
+</details>
+<!-- /diagram -->
+
+## 8. Tournament lifecycle by format
+
+<!-- diagram:flow-lifecycle -->
+![flow-lifecycle](diagrams/flow-lifecycle.png)
+
+<details><summary>Mermaid source (<code>diagrams/src/flow-lifecycle.mmd</code>)</summary>
+
+```mermaid
+flowchart LR
+    subgraph WC ["World Cup"]
+      direction LR
+      w1["Group stage"] -->|"every group finished"| w2["Knockouts"] --> w3["Final"]
+    end
+    subgraph UCL ["Champions League"]
+      direction LR
+      u1["League phase"] -->|"all league matches played"| u2["Play-offs"] -->|"winners known"| u3["Knockouts"] --> u4["Final"]
+    end
+    subgraph LG ["League"]
+      direction LR
+      l1["Matchdays"] -->|"all fixtures played"| l2["Table decided"]
+    end
+    subgraph KO ["Knockout Cup"]
+      direction LR
+      k1["First round<br/>(byes auto-advance)"] --> k2["…"] --> k3["Final"]
+    end
+    done(["🏆 Finished<br/>champion screen"])
+    w3 --> done
+    u4 --> done
+    l2 --> done
+    k3 --> done
+
+    classDef s fill:#1F2B50,stroke:#5B8CFF,color:#fff
+    classDef f fill:#FFC93C,stroke:#E09A12,color:#3A2500
+    class w1,w2,w3,u1,u2,u3,u4,l1,l2,k1,k2,k3 s
+    class done f
+```
+
+</details>
+<!-- /diagram -->

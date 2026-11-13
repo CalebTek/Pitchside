@@ -1,0 +1,60 @@
+flowchart LR
+    subgraph ui ["Presentation — src/app + src/components"]
+      direction TB
+      router["<b>Router</b><br/>_layout.tsx · expo-router Stack"]
+      subgraph screens ["Screens"]
+        direction TB
+        home["Home<br/>index.tsx"]
+        wizard["Create wizard<br/>new.tsx"]
+        tscreen["Tournament<br/>t/[id]/index.tsx"]
+        entry["Score entry (modal)<br/>t/[id]/match/[mid].tsx"]
+        champ["Champion<br/>t/[id]/champion.tsx"]
+      end
+      subgraph sheets ["Wizard sheets"]
+        direction TB
+        picker["<b>ClubPicker</b><br/>search · leagues · packs"]
+        tally["<b>TallyDraw</b><br/>colour tallies · spin reveal"]
+      end
+      kit["<b>UI kit</b><br/>ui.tsx · MatchCard<br/>StandingsTable · Bracket<br/>+ theme"]
+      router --> screens
+      wizard --> sheets
+      screens --> kit
+      sheets --> kit
+    end
+
+    catalogue["<b>Club catalogue</b><br/>src/data/clubs.ts<br/>105 clubs & nations · packs"]
+
+    subgraph state ["State — src/store"]
+      direction TB
+      store["<b>useStore</b> (Zustand)<br/>create · setResult · clearResult<br/>renameTeam · resetResults · remove"]
+      persist["persist middleware"]
+      store --> persist
+    end
+
+    subgraph engine ["Domain — src/engine (pure TS)"]
+      direction TB
+      gen["<b>generate.ts</b><br/>defaultSettings · validate<br/>createTournament · buildBracket"]
+      res["<b>resolve.ts</b><br/>Resolver: tables, sources, ties,<br/>matches, podium, progress"]
+      draw["<b>draw.ts</b><br/>TALLIES · pickRandom · drawAll"]
+      types["<b>types.ts</b>"]
+      gen --> types
+      res --> types
+    end
+
+    disk[("AsyncStorage")]
+
+    sheets --> catalogue
+    tally -- "pickRandom()" --> draw
+    screens -- "read tournaments ·<br/>dispatch actions" --> store
+    screens -- "new Resolver(t)<br/>validate()" --> engine
+    store -- "createTournament()" --> gen
+    persist -- "JSON" --> disk
+
+    classDef l1 fill:#1F2B50,stroke:#5B8CFF,color:#fff
+    classDef l2 fill:#18223F,stroke:#9B7CFF,color:#fff
+    classDef l3 fill:#0E3B2E,stroke:#3DF5A7,color:#fff
+    classDef data fill:#3A2A00,stroke:#FFC93C,color:#fff
+    class router,home,wizard,tscreen,entry,champ,kit,picker,tally l1
+    class store,persist l2
+    class gen,res,draw,types l3
+    class catalogue data
