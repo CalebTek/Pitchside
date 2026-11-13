@@ -13,7 +13,8 @@ Technical documentation for Pitchside, a mobile app for running local football t
 | 7 | [Tech stack](tech-stack.md) | See which libraries are used and why |
 | 8 | [Testing](testing.md) | Run and extend the test suite |
 | 9 | [Build & release](build-and-release.md) | Ship an APK, a Play Store bundle or an iOS build |
-| 10 | [Roadmap](roadmap.md) | See what's planned next, including monetisation options |
+| 10 | [Distribution](distribution.md) | Publish on Google Play, Huawei, Palm Store, Samsung, Apple or as a direct APK |
+| 11 | [Roadmap](roadmap.md) | See what's planned next, including monetisation options |
 | — | [ADRs](adr/) | Read the reasons behind key decisions |
 | — | [Diagrams](diagrams/) | Diagram sources (`src/*.mmd`) and rendered PNGs |
 

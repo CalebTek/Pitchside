@@ -60,7 +60,15 @@ EAS creates and stores the signing keys for you. **Keep the Android upload key s
 4. Fill in the privacy nutrition label (*Data Not Collected* for 1.0), screenshots for the required iPhone sizes, a description and a support URL.
 5. Test with TestFlight, then submit for review.
 
-## 5. Versioning
+## 5. Direct APK release
+
+1. Build the APK (section 1).
+2. Create a GitHub Release tagged `vX.Y.Z` with release notes.
+3. Attach the APK **named `Pitchside.apk`**. The website button uses `releases/latest/download/Pitchside.apk`.
+
+See [distribution.md](distribution.md) for every store.
+
+## 6. Versioning
 
 | Field | Where | Rule |
 | --- | --- | --- |
@@ -70,7 +78,7 @@ EAS creates and stores the signing keys for you. **Keep the Android upload key s
 
 Tag releases in git: `git tag v1.1.0 && git push --tags`.
 
-## 6. Pre-release checklist
+## 7. Pre-release checklist
 
 - [ ] `npm test` and `npm run typecheck` pass
 - [ ] Manual checklist in [testing.md](testing.md) done on a real device

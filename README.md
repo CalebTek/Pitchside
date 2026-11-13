@@ -19,6 +19,12 @@
 
 ---
 
+<p align="center">
+  <a href="https://github.com/CalebTek/Pitchside/releases/latest/download/Pitchside.apk"><b>⬇ Download for Android</b></a> ·
+  <a href="https://calebtek.github.io/Pitchside/">Website</a> ·
+  <a href="https://calebtek.github.io/Pitchside/privacy.html">Privacy</a>
+</p>
+
 ## Why Pitchside?
 
 eFootball removed its cup competitions, but friends still want to play them. Pitchside brings them back. You set up the competition, play the games on your console and type in the scores. Pitchside does the rest: tables, tie-breakers, who goes through, the bracket, two-legged aggregates, penalty shoot-outs and the champion.
@@ -112,6 +118,8 @@ The full release checklist for Google Play and the App Store is in [`docs/build-
 | [Tech stack](docs/tech-stack.md) | Libraries and why each was chosen |
 | [Testing](docs/testing.md) | Test strategy and how to run it |
 | [Build & release](docs/build-and-release.md) | APK, EAS, Play Store, App Store |
+| [Distribution](docs/distribution.md) | Stores, requirements, recommended order |
+| [Store kit](store/README.md) | Listing text, graphics, screenshots, data-safety answers |
 | [Roadmap](docs/roadmap.md) | Planned features and monetisation ideas |
 
 ## Project structure
