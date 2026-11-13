@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "Pitchside",
+    "slug": "pitchside",
+    "scheme": "pitchside",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0A0F1E",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.calebtek.pitchside"
+    },
+    "android": {
+      "package": "com.calebtek.pitchside",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#0A0F1E",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "output": "single",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160,
+          "resizeMode": "contain",
+          "backgroundColor": "#0A0F1E"
+        }
+      ]
+    ]
+  }
+}
